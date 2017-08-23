@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+/*
+Color Palette
+TODO: Actually implement SASS / variables
+Orange/Peach = #F8B195
+Pinkish Red = #F67280
+Red Violet = #C06C84
+Purple = #6C5B7B
+Medium / Dark Blue = #355C7D
+*/
+
+
+body {
+    font-family: Helvetica, sans-serif;
+    background: #93cede; /* Old browsers */
+    background: -moz-linear-gradient(top, #93cede 0%, #75bdd1 41%, #49a5bf 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #93cede 0%,#75bdd1 41%,#49a5bf 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #93cede 0%,#75bdd1 41%,#49a5bf 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100vh;
+    margin: 0;
+}

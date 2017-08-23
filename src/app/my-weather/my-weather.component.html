@@ -1,0 +1,26 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="container" style="text-align:center">
+        <h1 class="childbox">My Weather</h1>      
+        <h1 class="childbox" *ngIf="userData">The weather in {{userData?.body.location.city}} is {{userData?.body.current_observation.feelslike_string}} and {{userData?.body.current_observation.weather | lowercase}}</h1> 
+        <div class="childbox" *ngIf="!userData">
+          <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+          <br />
+          <span class="sr-only">Loading your weather...</span>
+        </div>   
+        <img class="childbox" src="{{userData?.body.current_observation.icon_url}}" />  
+        <input id="city"  name="city" class="childbox" type="text" name="city" #city placeholder="Enter city" required>
+        <input id="state" name="state" class="childbox" type="text" name="state" #state placeholder="Enter state" required>
+        <div *ngIf="state.invalid && (state.dirty || state.touched)">
+            <div *ngIf="city.errors.required">
+                City is required.
+            </div>
+            <div *ngIf="state.errors.required">
+                 State is required.
+            </div>
+        </div>
+        <button class="childbox" type="button" (click)="getLocationWeather(state.value, city.value)">Find Weather</button>
+        <div class="childbox">
+          <pre>{{results | json}}</pre>
+        </div>
+  </div>
+  <pre>{{userData}}</pre>
