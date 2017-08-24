@@ -41,8 +41,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
     }
 
     //TODO: Move to weather service
-    getLocationWeather(state: string, city: string) {
-            this.weatherService.getLocationWeather(state, city).subscribe(data => { 
+    getLocationWeather() {
+        var formVal = this.weatherForm.value;
+            this.weatherService.getLocationWeather(formVal.state, formVal.city).subscribe(data => { 
                 this.userData = data;
             }, error => {
                 this.errorMessage = error;
