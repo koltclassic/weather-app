@@ -5,8 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/subscription';
 import { WeatherService } from '../weather.service';
 import { AppConfig } from '../app.config';
-
-import 'rxjs/add/operator/mergeMap';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'my-weather',
@@ -19,37 +18,36 @@ import 'rxjs/add/operator/mergeMap';
     weather: any;
     location: Location;
     userData: any;
+    errorMessage: string;
+
+    weatherForm = new FormGroup({
+        city: new FormControl('', Validators.required),
+        state: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(2)])
+    });
 
     constructor(private http: HttpClient, private weatherService: WeatherService) { 
 
     }
 
     ngOnInit(): void {
-        var userData = this.getUserLocation().subscribe(resp => {
-        this.getLocationWeatherLatLong(resp.coords.latitude, resp.coords.longitude);
-        }, error => {
-        return false;
+        this.getUserLocation().subscribe(resp => {
+            this.weatherService.getLocationWeatherLatLong(resp.coords.latitude, resp.coords.longitude).subscribe(data => {
+              this.userData = data;  
+            });
+        }, 
+        error => {
+            this.errorMessage = error;
         })
     }
 
     //TODO: Move to weather service
     getLocationWeather(state: string, city: string) {
-    this.http.get(AppConfig.apiBase + state + '/' + city + '.json', {observe: 'response'}).subscribe(data => {
-        this.userData = data;
-        console.log(data);
-    }, error => {
-        console.log(error);
-        return false;
-    })
-    }
-
-    //TODO: Move to weather service
-    getLocationWeatherLatLong(lat, lng){
-    this.http.get(AppConfig.apiBase + lat + ',' + lng + '.json', {observe: 'response'}).subscribe(data => {
-        this.userData = data;
-        console.log(this.userData);
-    })
-    }
+            this.weatherService.getLocationWeather(state, city).subscribe(data => { 
+                this.userData = data;
+            }, error => {
+                this.errorMessage = error;
+            });
+        }
 
     getUserLocation():Observable<any> {
     return Observable.create(observer => {
