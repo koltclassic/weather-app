@@ -19,6 +19,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
     location: Location;
     userData: any;
     errorMessage: string;
+    spinner: boolean = false;
 
     weatherForm = new FormGroup({
         city: new FormControl('', Validators.required),
@@ -30,9 +31,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
     }
 
     ngOnInit(): void {
+        this.spinner = true;
         this.getUserLocation().subscribe(resp => {
             this.weatherService.getLocationWeatherLatLong(resp.coords.latitude, resp.coords.longitude).subscribe(data => {
-              this.userData = data;  
+              this.userData = data;
+              this.spinner = false;  
             });
         }, 
         error => {
@@ -44,7 +47,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
     getLocationWeather() {
         var formVal = this.weatherForm.value;
             this.weatherService.getLocationWeather(formVal.state, formVal.city).subscribe(data => { 
-                this.userData = data;
+                this.userData = data;                
+                if (data.response.error){
+                    this.errorMessage = data.response.error.description;
+                    this.userData = false;
+                }
+                console.log(data);
             }, error => {
                 this.errorMessage = error;
             });
@@ -58,7 +66,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
                     observer.next(position);
                     observer.complete();
                 },
-                (error) => observer.error(error)
+                (error) => {
+                    if (error.code == error.PERMISSION_DENIED) {
+                        this.spinner = false;
+                    }
+                }
             );
         } else {
             observer.error('Unsupported Browser');

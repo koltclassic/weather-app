@@ -1,14 +1,14 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="container" style="text-align:center">
   <h1 class="childbox">My Weather</h1>      
-  <h1 class="childbox" *ngIf="userData">The weather in {{userData?.location.city}} is {{userData?.current_observation.feelslike_string}} and {{userData?.current_observation.weather | lowercase}}</h1> 
-  <div class="childbox" *ngIf="!userData">
+  <h1 class="childbox" *ngIf="userData">The weather in {{userData?.location?.city}} is {{userData?.current_observation?.feelslike_string}} and {{userData?.current_observation?.weather | lowercase}}</h1> 
+  <div class="childbox" *ngIf="spinner">
     <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
     <br />
     <span class="sr-only">Loading your weather...</span>
   </div>   
-  <img class="childbox" src="{{userData?.current_observation.icon_url}}" />  
-  <form class="childbox" [formGroup]="weatherForm" (ngSubmit)="getLocationWeather(this.weatherForm.state, this.weatherForm.city)">
+  <img class="childbox" src="{{userData?.current_observation?.icon_url}}" />  
+  <form class="childbox" [formGroup]="weatherForm" (ngSubmit)="getLocationWeather()">
     <div class="form-group">
         <input id="city" class="childbox" type="text" name="city" #city placeholder="Enter city" formControlName="city">
         <div *ngIf="weatherForm.controls['city'].hasError('required')">
@@ -23,8 +23,7 @@
     </div>
     <button class="childbox" type="submit">Find Weather</button>    
   </form>
-
-  <h3>{{errorMsg}}</h3>
+  <h3 *ngIf="errorMessage">{{errorMessage}}</h3>
   <div class="childbox">
     <pre>{{results | json}}</pre>
   </div>
